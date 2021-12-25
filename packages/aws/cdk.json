@@ -1,0 +1,6 @@
+{
+  "app": "ts-node app.ts",
+  "output": ".cdk",
+  "requireApproval": "never",
+  "force": true
+}

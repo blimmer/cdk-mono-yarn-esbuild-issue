@@ -1,0 +1,71 @@
+name: Sync Nightly
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch: {}
+
+env:
+  NODE_ENV: production
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+jobs:
+  sync:
+    name: Sync with CDK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Github Context
+        env: 
+          JOB_GITHUB: "${{ toJson(github) }}"
+        run: echo "$JOB_GITHUB"
+
+      - name: Update $PATH
+        run: echo "./node_modules/.bin" >> $GITHUB_PATH
+
+      - name: Log Env Vars
+        run: npx @bahmutov/print-env GITHUB_ FILTER_
+      
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+
+      - name: Install Node/NPM
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          cache: npm
+      
+      - name: Install Deps
+        run: |-
+          echo "Node Version:"
+          node -v
+
+          echo "NPM Version:"
+          npm -v
+
+          npm i -g npm aws-cdk@next
+          npm install
+
+      - name: Cache Metadata
+        run: npm run cache
+
+      - name: Maybe Scale Accounts
+        run: npm run scale
+
+      - name: Purge Old Sites
+        run: npm run purge -- -n "WorkSites"
+
+      - name: Deploy All Sites
+        run: npm run bulk -- -n "WorkSites"
+
+      - name: Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 🤖 Updated cache info
+          commit_user_name: Bot SiteArcade
+          commit_user_email: bot@sitearcade.com
+          commit_author: Bot SiteArcade <bot@sitearcade.com>

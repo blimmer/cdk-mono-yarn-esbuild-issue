@@ -1,0 +1,6 @@
+{
+  "dep": "prod,dev,optional",
+  "deep": true,
+  "rejectVersion": "/^=/",
+  "reject": []
+}

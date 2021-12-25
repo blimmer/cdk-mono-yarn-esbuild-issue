@@ -1,0 +1,29 @@
+# directories
+**/.*/
+**/node_modules/
+**/out/
+**/dist/
+**/build/
+**/preval/
+
+# yarn
+!.yarn/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# files
+.env*.local
+
+# extensions
+*.log
+*.diff
+
+# exclude
+!.github/
+!.circleci/
+!.vscode/

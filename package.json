@@ -1,0 +1,17 @@
+{
+  "name": "test-case",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "preinstall": "npx only-allow yarn"
+  },
+  "devDependencies": {},
+  "packageManager": "yarn@3.2.0-rc.8",
+  "engines": {
+    "node": ">=14",
+    "npm": "please-use-yarn",
+    "yarn": ">=2"
+  }
+}
